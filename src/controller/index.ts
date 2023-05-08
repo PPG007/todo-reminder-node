@@ -1,4 +1,8 @@
 import Router = require("koa-router");
+import userApis from './user';
+import todoApis from './todo';
+import todoRecordApis from './todoRecord';
+import appApis from './app';
 
 enum HttpMethod {
     GET,
@@ -15,6 +19,11 @@ interface Api {
 }
 
 let apis = new Array<Api>();
+
+apis.push(...userApis);
+apis.push(...todoApis);
+apis.push(...todoRecordApis);
+apis.push(...appApis);
 
 function registerApi(api: Api) :void {
     apis.push(api);
@@ -41,4 +50,4 @@ function getRouter():Router {
     return router;
 }
 
-export { registerApi, getRouter }
+export {Api, HttpMethod }
