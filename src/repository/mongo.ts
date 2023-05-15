@@ -109,7 +109,6 @@ class mongoRepository<T extends Orm> implements Repository<T> {
         })
     }
     async findOne(condition: any): Promise<T> {
-        await client.connect();
         const result = await this.getCollection().findOne(condition);
         return new Promise<T>((res, rej) => {
             if(!result) {

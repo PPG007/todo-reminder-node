@@ -1,9 +1,3 @@
-import Router = require("koa-router");
-import userApis from './user';
-import todoApis from './todo';
-import todoRecordApis from './todoRecord';
-import appApis from './app';
-
 enum HttpMethod {
     GET,
     POST,
@@ -18,16 +12,18 @@ interface Api {
     handler: Router.IMiddleware;
 }
 
+import Router = require("koa-router");
+import userApis from './user';
+import todoApis from './todo';
+import todoRecordApis from './todoRecord';
+import appApis from './app';
+
 let apis = new Array<Api>();
 
 apis.push(...userApis);
 apis.push(...todoApis);
 apis.push(...todoRecordApis);
 apis.push(...appApis);
-
-function registerApi(api: Api) :void {
-    apis.push(api);
-}
 
 function getRouter():Router {
     const router = new Router();
@@ -50,4 +46,4 @@ function getRouter():Router {
     return router;
 }
 
-export {Api, HttpMethod }
+export { getRouter, Api, HttpMethod }

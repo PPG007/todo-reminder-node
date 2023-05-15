@@ -1,6 +1,6 @@
 import { Api, HttpMethod } from ".";
 
-let apis: Api[];
+let apis: Api[] = [];
 
 const getLatestApp: Api = {
     path: '/app/latest',

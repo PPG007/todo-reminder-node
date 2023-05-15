@@ -1,6 +1,11 @@
 {
     "mongodb": {
-        "uri": "mongodb://127.0.0.1:27017",
+        "uri": "mongodb://127.0.0.1:27018",
         "database": "todo"
-    }
+    },
+    "token": {
+        "key": "?E(H+MbQeThWmZq4t6w9z$C&F)J@NcRf",
+        "validDays": 30
+    },
+    "port": 8080
 }

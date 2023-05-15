@@ -5,11 +5,11 @@ interface Middleware {
     handler: koa.Middleware;
 }
 
+import recovery from './recovery';
+
 let middlewares = new Array<Middleware>();
 
-function registerMiddleware(middleware: Middleware): void {
-    middlewares.push(middleware);
-}
+middlewares.push(recovery);
 
 function sortMiddleware(): void {
     middlewares.sort((a, b) => {
@@ -25,3 +25,5 @@ function getKoaApp(): koa {
     })
     return app;
 }
+
+export {getKoaApp, Middleware}

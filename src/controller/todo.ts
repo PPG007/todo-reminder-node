@@ -1,8 +1,6 @@
-import { ParameterizedContext, Next } from "koa";
-import { IRouterParamContext } from "koa-router";
 import { Api, HttpMethod } from ".";
 
-let apis: Api[];
+let apis: Api[] = [];
 
 const upsert: Api = {
     path: '/todos/upsert',
@@ -40,7 +38,7 @@ const uploadProxy: Api = {
     path: '/todos/object/uploadProxy',
     method: HttpMethod.POST,
     handler: (ctx, next) => {
-        
+
     }
 }
 
