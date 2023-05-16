@@ -3,26 +3,32 @@ import * as jwt from 'jsonwebtoken';
 import application = require('../application.json');
 import { randomBytes } from 'crypto';
 
-async function getHashedPassword(password: string): Promise<string> {
+export class UserClaim {
+    id: string;
+    userId: string;
+}
+
+export async function getHashedPassword(password: string): Promise<string> {
     return bcrypt.hash(password, 10)
 }
 
-async function comparePassword(plainPassword:string, hashedPassword: string): Promise<boolean> {
+export async function comparePassword(plainPassword:string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(plainPassword, hashedPassword);
 }
 
-function signToken(obj: Object): string {
+export function signToken(obj: UserClaim): string {
     return jwt.sign(obj, application.token.key, {
-        expiresIn: `${application.token.validDays}days`
+        algorithm: 'HS256',
+        expiresIn: `${application.token.validDays}days`,
     })
 }
 
-function genRandomPassword(): string{
+export function genRandomPassword(): string{
     const buffer = randomBytes(20);
     return buffer.toString('base64').slice(0, 20);
 }
 
-async function checkToken(token: string): Promise<boolean> {
+export async function checkToken(token: string): Promise<boolean> {
     return new Promise<boolean>((res, rej) => {
         jwt.verify(token, application.token.key, {
             algorithms: ['HS256']
@@ -34,7 +40,34 @@ async function checkToken(token: string): Promise<boolean> {
             }
         })
     })
-
 }
 
-export {getHashedPassword, comparePassword, signToken, genRandomPassword, checkToken}
+export async function parseToken(token: string): Promise<UserClaim> {
+    return new Promise<UserClaim>((res, rej) => {
+        jwt.verify(token, application.token.key, {
+            algorithms: ['HS256']
+        }, (error, decoded) => {
+            if (error) {
+                rej(error);
+            }
+            res(decoded as UserClaim);
+        })
+    })
+}
+
+export function strInArray(str: string, arr: string[]): boolean {
+    for (let index = 0; index < arr.length; index++) {
+        if (arr[index] === str) {
+            return true;
+        }
+    }
+    return false;
+}
+
+export * from './router';
+
+export function copyObject(from: object, to: object): void{
+    for (let key in from) {
+        to[key] = from[key];
+    }
+}

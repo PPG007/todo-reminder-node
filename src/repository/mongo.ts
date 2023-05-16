@@ -126,6 +126,14 @@ class mongoRepository<T extends Orm> implements Repository<T> {
             res(this.formatDocumentsFromDB(docs));
         })
     }
+    async removeOne(condition: any): Promise<void> {
+        await this.getCollection().deleteOne(condition);
+        return;
+    }
+    async removeAll(condition: any): Promise<void> {
+        await this.getCollection().deleteMany(condition);
+        return;
+    }
     formatDocumentFromDB(result: WithId<Document>): T {
         let doc = new this.instanceConstructor();
         const map = doc.getOrmMap();
@@ -151,9 +159,7 @@ class mongoRepository<T extends Orm> implements Repository<T> {
     formatDocumentToDB(doc: T): Document {
         const docInDB = new Object();
         const map = doc.getOrmMap();
-        console.log(Object.keys(doc))
         for (let key in doc) {
-            console.log(key)
             if (map.has(key)) {
                 docInDB[map.get(key.toString())] = doc[key]
                 continue;

@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb"
 import { Orm } from "../orm/orm";
 import { getDefaultOrmMap } from "./common";
 import { RepeatType } from "./todo";
+import getRepository from "../repository/mongo";
 
 class TodoRecord implements Orm {
     id: ObjectId;
@@ -25,6 +26,20 @@ class TodoRecord implements Orm {
     }
     getCollectionName(): string {
         return 'todoRecord';
+    }
+    static async deleteByTodoId(todoId: ObjectId): Promise<void> {
+        const repo = await getRepository<TodoRecord>(TodoRecord);
+        const condition = {
+            todoId: todoId,
+            isDeleted: false,
+        };
+        const updater = {
+            $set: {
+                isDeleted: true,
+                updatedAt: new Date(),
+            }
+        };
+        return repo.updateAll(condition, updater);
     }
 }
 

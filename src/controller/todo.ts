@@ -1,20 +1,32 @@
+import { ObjectId } from "mongodb";
 import { Api, HttpMethod } from ".";
+import * as util from '../util';
+import { Todo } from "../model/todo";
+import { TodoRecord } from "../model/todoRecord";
+import { UpsertTodoRequest } from "./dto/todo";
 
 let apis: Api[] = [];
 
 const upsert: Api = {
     path: '/todos/upsert',
     method: HttpMethod.POST,
-    handler: (ctx, next) => {
-
+    handler: async (ctx, next) => {
+        const req = new UpsertTodoRequest(ctx.request.body as object);
+        req.valid();
+        const todo = req.formatToModel(util.getUserId(ctx));
+        await todo.upsert();
+        ctx.body = {};
     }
 }
 
 const deleteTodo: Api = {
     path: '/todos/:id',
     method: HttpMethod.DELETE,
-    handler: (ctx, next) => {
-
+    handler: async (ctx, next) => {
+        const todoId = ObjectId.createFromHexString(ctx.params['id']);
+        await Todo.deleteById(todoId);
+        await TodoRecord.deleteByTodoId(todoId);
+        ctx.body = {};
     }
 }
 
@@ -22,7 +34,10 @@ const genUploadUrl: Api = {
     path: '/todos/uploadUrl',
     method: HttpMethod.GET,
     handler: (ctx, next) => {
-
+        ctx.response.body = {
+            id: util.getUserPrimaryKeyId(ctx),
+            userId: util.getUserId(ctx),
+        };
     }
 }
 
