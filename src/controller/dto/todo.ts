@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { RepeatType, Todo } from "../../model/todo";
+import { RemindSetting, RepeatType, Todo } from "../../model/todo";
 import moment = require("moment");
 import { throwValidationError } from "../../errors";
 import { copyObject } from "../../util";
@@ -26,14 +26,14 @@ export class UpsertTodoRequest {
             result.images = this.images;
         }
         result.userId = userId;
-        result.remindSetting = {
-            remindAt: moment(this.remindAt, moment.ISO_8601, true).toDate(),
-            isRepeatable: this.isRepeatable,
-            repeatSetting: {
-                type: this.repeatType as RepeatType,
-                dateOffset: this.repeatDateOffset,
-            }
+        const remindSetting = new RemindSetting();
+        remindSetting.remindAt = moment(this.remindAt, moment.ISO_8601, true).toDate();
+        remindSetting.isRepeatable = this.isRepeatable;
+        remindSetting.repeatSetting = {
+            type: this.repeatType as RepeatType,
+            dateOffset: this.repeatDateOffset,
         }
+        result.remindSetting = remindSetting;
         return result;
     };
     valid(): void {

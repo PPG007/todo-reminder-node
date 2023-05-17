@@ -41,6 +41,44 @@ class TodoRecord implements Orm {
         };
         return repo.updateAll(condition, updater);
     }
+    static async deleteUndoneOnesByTodoId(todoId: ObjectId): Promise<void> {
+        const repo = await getRepository<TodoRecord>(TodoRecord);
+        const condition = {
+            todoId: todoId,
+            isDeleted: false,
+            hasBeenDone: false,
+        };
+        const updater = {
+            $set: {
+                isDeleted: true,
+                updatedAt: new Date(),
+            }
+        };
+        return repo.updateAll(condition, updater);
+    }
+    static async countNotDoneByTodoId(todoId: ObjectId): Promise<number> {
+        const repo = await getRepository<TodoRecord>(TodoRecord);
+        const condition = {
+            todoId: todoId,
+            isDeleted: false,
+            hasBeenDone: false,
+        }
+        return repo.count(condition);
+    }
+    async create(): Promise<void> {
+        const repo = await getRepository<TodoRecord>(TodoRecord);
+        this.id = new ObjectId();
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+        this.isDeleted = false;
+        return repo.insert(this);
+    }
+    constructor() {
+        this.isDeleted = false;
+        this.hasBeenDone = false;
+        this.hasBeenReminded = false;
+        this.isRepeatable = false;
+    }
 }
 
 export { TodoRecord }

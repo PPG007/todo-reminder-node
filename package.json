@@ -23,5 +23,8 @@
     "@types/koa-router": "^7.4.4",
     "@types/moment": "^2.13.0",
     "@types/node": "^20.1.0"
+  },
+  "scripts": {
+    "run": "tsc && node lib/index.js"
   }
 }

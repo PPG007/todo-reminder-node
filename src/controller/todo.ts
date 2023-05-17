@@ -15,6 +15,8 @@ const upsert: Api = {
         req.valid();
         const todo = req.formatToModel(util.getUserId(ctx));
         await todo.upsert();
+        await TodoRecord.deleteUndoneOnesByTodoId(todo.id);
+        await todo.genNextTodoRecord(true);
         ctx.body = {};
     }
 }
