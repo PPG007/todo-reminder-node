@@ -79,6 +79,51 @@ class TodoRecord implements Orm {
         this.hasBeenReminded = false;
         this.isRepeatable = false;
     }
+    static async markAsDone(id: ObjectId): Promise<void> {
+        const repo = await getRepository<TodoRecord>(TodoRecord);
+        const condition = {
+            _id: id,
+        };
+        const updater = {
+            $set: {
+                hasBeenDone: true,
+                doneAt: new Date(),
+            }
+        };
+        return repo.updateOne(condition, updater);
+    }
+    static async undo(id: ObjectId): Promise<void> {
+        const repo = await getRepository<TodoRecord>(TodoRecord);
+        const condition = {
+            _id: id
+        };
+        const updater = {
+            $set: {
+                hasBeenDone: false
+            }
+        }
+        return repo.updateOne(condition, updater);
+    }
+    static async deleteById(id: ObjectId): Promise<void> {
+        const repo = await getRepository<TodoRecord>(TodoRecord);
+        const condition = {
+            _id: id,
+        };
+        const updater = {
+            $set: {
+                isDeleted: true,
+                updatedAt: new Date(),
+            }
+        };
+        return repo.updateOne(condition, updater);
+    }
+    static async getById(id: ObjectId): Promise<TodoRecord> {
+        const repo = await getRepository<TodoRecord>(TodoRecord);
+        const condition = {
+            _id: id
+        };
+        return repo.findOne(condition);
+    }
 }
 
 export { TodoRecord }
