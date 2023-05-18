@@ -64,8 +64,6 @@ export function strInArray(str: string, arr: string[]): boolean {
     return false;
 }
 
-export * from './router';
-
 export function copyObject(from: object, to: object): void{
     for (let key in from) {
         if (typeof from[key] === 'object') {
@@ -77,3 +75,7 @@ export function copyObject(from: object, to: object): void{
         to[key] = from[key];
     }
 }
+
+export * from './router';
+export * from './log';
+export * from './email';

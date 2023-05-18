@@ -12,7 +12,11 @@
     "koa-router": "^12.0.0",
     "moment": "^2.29.4",
     "mongodb": "^5.4.0",
-    "typescript": "^5.0.4"
+    "nodemailer": "^6.9.2",
+    "pino": "^8.14.1",
+    "typescript": "^5.0.4",
+    "uuid": "^9.0.0",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -22,7 +26,11 @@
     "@types/koa-bodyparser": "^4.3.10",
     "@types/koa-router": "^7.4.4",
     "@types/moment": "^2.13.0",
-    "@types/node": "^20.1.0"
+    "@types/node": "^20.1.0",
+    "@types/nodemailer": "^6.4.7",
+    "@types/pino": "^7.0.5",
+    "@types/uuid": "^9.0.1",
+    "@types/ws": "^8.5.4"
   },
   "scripts": {
     "run": "tsc && node lib/index.js"

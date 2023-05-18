@@ -7,5 +7,15 @@
         "key": "?E(H+MbQeThWmZq4t6w9z$C&F)J@NcRf",
         "validDays": 30
     },
-    "port": 8080
+    "port": 8080,
+    "gocq": {
+        "uri": "ws://127.0.0.1:5700"
+    },
+    "alert": {
+        "receiver": "1658272229@qq.com",
+        "host": "smtp.163.com",
+        "port": 465,
+        "secure": true,
+        "username": "kostonzhuang@163.com"
+    }
 }
