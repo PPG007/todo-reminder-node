@@ -1,4 +1,6 @@
 import { TodoRecord } from "../../model/todoRecord";
+import { copyObject } from "../../util";
+import { ListCondition } from "./common";
 
 export class TodoRecordDetail {
     id: string;
@@ -29,14 +31,14 @@ export class TodoRecordDetail {
         }
         const detail: TodoRecordDetail = {
             id: todoRecord.id.toHexString(),
-            remindAt: todoRecord.remindAt.toISOString(),
+            remindAt: todoRecord.remindAt?.toISOString(),
             hasBeenDone: todoRecord.hasBeenDone,
             content: todoRecord.content,
             needRemind: todoRecord.needRemind,
             isRepeatable: todoRecord.isRepeatable,
             repeatType: todoRecord.repeatType,
             repeatDateOffset: todoRecord.repeatDateOffset,
-            todoId: todoRecord.todoId.toHexString(),
+            todoId: todoRecord.todoId?.toHexString(),
             images: images,
         };
         return detail;
@@ -46,4 +48,19 @@ export class TodoRecordDetail {
 export class ImageDetail {
     name: string;
     url: string;
+}
+
+export class SearchTodoRecordsRequest {
+    hasBeenDone: boolean;
+    listCondition: ListCondition
+    constructor(body: object) {
+        this.hasBeenDone = false;
+        this.listCondition = new ListCondition();
+        copyObject(body, this);
+    }
+}
+
+export class SearchTodoRecordsResponse {
+    total: number;
+    items: TodoRecordDetail[];
 }

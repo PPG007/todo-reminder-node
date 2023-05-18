@@ -68,6 +68,12 @@ export * from './router';
 
 export function copyObject(from: object, to: object): void{
     for (let key in from) {
+        if (typeof from[key] === 'object') {
+            let temp = new Object();
+            copyObject(from[key], temp)
+            to[key] = temp;
+            continue;
+        }
         to[key] = from[key];
     }
 }

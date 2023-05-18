@@ -1,8 +1,8 @@
 import { ObjectId } from "mongodb";
 import { Api, HttpMethod } from ".";
 import { TodoRecord } from "../model/todoRecord";
-import { TodoRecordDetail } from "./dto/todoRecord";
-
+import { SearchTodoRecordsRequest, SearchTodoRecordsResponse, TodoRecordDetail } from "./dto/todoRecord";
+import * as util from '../util';
 let apis: Api[] = [];
 
 const doneTodo: Api = {
@@ -49,7 +49,25 @@ const searchTodoRecords: Api = {
     path: '/todoRecords/search',
     method: HttpMethod.POST,
     handler: async (ctx, next) => {
-
+        const req = new SearchTodoRecordsRequest(ctx.request.body as object);
+        const condition = {
+            isDeleted: false,
+            hasBeenDone: req.hasBeenDone,
+            userId: util.getUserId(ctx),
+        };
+        if (!req.hasBeenDone) {
+            req.listCondition.orderBy = ['remindAt'];
+        }
+        const result = await TodoRecord.listByPagination(condition, req.listCondition);
+        const items = new Array<TodoRecordDetail>();
+        result.items.forEach((item) => {
+            items.push(TodoRecordDetail.createFromModel(item));
+        });
+        const resp: SearchTodoRecordsResponse = {
+            total: result.total,
+            items: items,
+        }
+        ctx.body = resp;
     }
 }
 

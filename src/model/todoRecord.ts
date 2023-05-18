@@ -2,7 +2,8 @@ import { ObjectId } from "mongodb"
 import { Orm } from "../orm/orm";
 import { getDefaultOrmMap } from "./common";
 import { RepeatType } from "./todo";
-import getRepository from "../repository/mongo";
+import getRepository, { PageResult } from "../repository/mongo";
+import { ListCondition } from "../controller/dto/common";
 
 class TodoRecord implements Orm {
     id: ObjectId;
@@ -123,6 +124,10 @@ class TodoRecord implements Orm {
             _id: id
         };
         return repo.findOne(condition);
+    }
+    static async listByPagination(condition: any, listcondition: ListCondition): Promise<PageResult<TodoRecord>> {
+        const repo = await getRepository<TodoRecord>(TodoRecord);
+        return repo.findAllWithPage(condition, listcondition.orderBy, listcondition.page, listcondition.perPage);
     }
 }
 

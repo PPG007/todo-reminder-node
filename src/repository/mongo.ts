@@ -21,7 +21,7 @@ interface Repository<T extends Orm> {
     close(): Promise<void>
 }
 
-class PageResult<T extends Orm> {
+export class PageResult<T extends Orm> {
     total: number;
     items: Array<T>
 }

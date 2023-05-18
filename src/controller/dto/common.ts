@@ -78,3 +78,14 @@ export function validate(obj: Object, validator: Validator): void {
         }
     }
 }
+
+export class ListCondition {
+    orderBy: string[];
+    page: number;
+    perPage: number;
+    constructor() {
+        this.page = 1;
+        this.perPage = 10;
+        this.orderBy = [];
+    }
+}
