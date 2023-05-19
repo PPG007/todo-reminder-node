@@ -1,7 +1,7 @@
 {
     "mongodb": {
         "uri": "mongodb://127.0.0.1:27018",
-        "database": "todo"
+        "database": "todo-node"
     },
     "token": {
         "key": "?E(H+MbQeThWmZq4t6w9z$C&F)J@NcRf",

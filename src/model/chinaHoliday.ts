@@ -39,6 +39,19 @@ class ChinaHoliday implements Orm {
         return new Promise<Date>((res) => {
             res(moment(holiday.date, 'YYYYMMDD').toDate());
         })
+    };
+    async upsert(): Promise<void> {
+        const condition = {
+            date: this.date,
+        };
+        const updater = {
+            $set: {
+                isWorkingDay: this.isWorkingDay,
+            }
+        };
+        const repo = await getRepository<ChinaHoliday>(ChinaHoliday);
+        await repo.findAndApply(condition, updater, true, false);
+        return;
     }
 }
 

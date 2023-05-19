@@ -10,19 +10,20 @@ class User implements Orm {
     updatedAt: Date;
     isDeleted: boolean;
     nickname: string;
+    remark: string;
     getOrmMap(): Map<string, string> {
         return getDefaultOrmMap();
     };
-    getCollectionName(): string{
+    getCollectionName(): string {
         return 'user';
     };
-    static async getByUserId(userId: string) :Promise<User> {
+    static async getByUserId(userId: string): Promise<User> {
         const repo = await getRepository<User>(User);
         return await repo.findOne({
             userId: userId,
         });
     };
-    static async updatePassword(userId: string, password: string):Promise<void> {
+    static async updatePassword(userId: string, password: string): Promise<void> {
         const condition = {
             userId: userId,
         }
@@ -33,6 +34,26 @@ class User implements Orm {
         }
         const repo = await getRepository<User>(User);
         return repo.updateOne(condition, updater);
+    };
+    async upsert(): Promise<void> {
+        const condition = {
+            userId: this.userId,
+        };
+        const updater = {
+            $set: {
+                password: this.password ? this.password : '',
+                nickname: this.nickname,
+                updatedAt: new Date(),
+                remark: this.remark,
+            },
+            $setOnInsert: {
+                isDeleted: false,
+                createdAt: new Date(),
+                _id: new ObjectId(),
+            }
+        };
+        const repo = await getRepository<User>(User);
+        await repo.findAndApply(condition, updater, true, false);
     }
 }
 

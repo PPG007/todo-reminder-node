@@ -1,15 +1,15 @@
 import WebSocket = require("ws");
 import application = require('../application.json');
 import * as util from '../util';
-import { ActionResponseHandler } from "./action";
+import { actionResponseHandler } from "./action";
+import { eventResponseHandler } from "./event";
 
 type closedHandler = (code: number, reason: Buffer) => void;
 type errorHandler = (error: Error) => void;
-type messageHandler = (data: WebSocket.RawData, isBinary: boolean) => void;
 type emptyHandler = () => void;
 type initFunc = () => void;
 
-enum ClientType {
+export enum ClientType {
     Action = 'action',
     Event = 'event'
 }
@@ -25,7 +25,7 @@ export function initWSClient(): void {
 function initActionWSClient(): void {
     util.warn({}, 'starting gocq action websockets client');
     actionWS = new WebSocket(`${application.gocq.uri}/api`);
-    actionWS.on('message', ActionResponseHandler);
+    actionWS.on('message', actionResponseHandler);
     actionWS.on('close', getClosedHandler(ClientType.Action, initActionWSClient));
     actionWS.on('error', getErrorHandler(ClientType.Action));
     actionWS.on('open', getOpenHandler(ClientType.Action));
@@ -34,18 +34,10 @@ function initActionWSClient(): void {
 function initEventWSClient(): void {
     util.warn({}, 'starting gocq event websockets client');
     eventWS = new WebSocket(`${application.gocq.uri}/event`);
-    eventWS.on('message', messageHandler);
+    eventWS.on('message', eventResponseHandler);
     eventWS.on('close', getClosedHandler(ClientType.Event, initEventWSClient));
     eventWS.on('error', getErrorHandler(ClientType.Event));
     eventWS.on('open', getOpenHandler(ClientType.Event));
-}
-
-function messageHandler(data: WebSocket.RawData, isBinary: boolean): void {
-    if (isBinary) {
-        util.warn({}, 'received binary data');
-        return;
-    }
-    util.warn(JSON.parse(data.toString()), 'message');
 }
 
 function getClosedHandler(clientType: ClientType, f: initFunc): closedHandler {
@@ -72,10 +64,22 @@ function getOpenHandler(clientType: ClientType): emptyHandler {
     }
 }
 
-export function getActionWSClient(): WebSocket {
-    return actionWS;
+function getWSClient(clientType: ClientType): WebSocket {
+    let client = actionWS;
+    if (clientType === ClientType.Event) {
+        client = eventWS;
+    }
+    if (!client || client.readyState != WebSocket.OPEN) {
+        util.warn({}, 'websocket connection not ready')
+        return null;
+    }
+    return client;
 }
 
-export function getEventWSClient(): WebSocket {
-    return eventWS;
+export function sendJSON(req: object, clientType: ClientType = ClientType.Action): void {
+    const ws = getWSClient(clientType);
+    if (!ws) {
+        return;
+    }
+    ws.send(JSON.stringify(req));
 }

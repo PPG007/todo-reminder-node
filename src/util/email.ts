@@ -30,3 +30,7 @@ export async function sendMail(to: string, subject: string, text: string): Promi
         });
     });
 }
+
+export async function sendAlert(text: string): Promise<void> {
+    return sendMail(application.alert.receiver, 'Alert', text);
+}
