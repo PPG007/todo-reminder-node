@@ -17,5 +17,11 @@
         "port": 465,
         "secure": true,
         "username": "kostonzhuang@163.com"
+    },
+    "minio": {
+        "bucket": "dev",
+        "urlExpiredSeconds": 3600,
+        "host": "127.0.0.1",
+        "port": 9000
     }
 }
