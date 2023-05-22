@@ -3,7 +3,9 @@ import { Api, HttpMethod } from ".";
 import * as util from '../util';
 import { Todo } from "../model/todo";
 import { TodoRecord } from "../model/todoRecord";
-import { UpsertTodoRequest } from "./dto/todo";
+import { GetObjectResponse, UpsertTodoRequest } from "./dto/todo";
+import { isObjectExist, signObjectUrl } from "../util/minio";
+import { ErrObjectNotFound } from "../errors";
 
 let apis: Api[] = [];
 
@@ -46,8 +48,14 @@ const genUploadUrl: Api = {
 const getObject: Api = {
     path: '/todos/object/:name',
     method: HttpMethod.GET,
-    handler: (ctx, next) => {
-
+    handler: async (ctx, next) => {
+        const name = ctx.params['name'];
+        const exist = isObjectExist(name);
+        if (!exist) {
+            throw ErrObjectNotFound;
+        }
+        const url = await signObjectUrl(name);
+        ctx.response.body = new GetObjectResponse(url);
     }
 }
 

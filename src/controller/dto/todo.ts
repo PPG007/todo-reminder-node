@@ -62,3 +62,23 @@ export class UpsertTodoRequest {
         copyObject(body, this);
     }
 }
+
+export class GetObjectResponse {
+    url: string;
+    constructor(url: string) {
+        this.url = url;
+    }
+}
+
+export class GetAppResponse {
+    id: string;
+    version: string;
+    createdAt: string;
+    fileName: string;
+    constructor(id: string, version: string, createdAt: Date, fileName: string) {
+        this.id = id;
+        this.version = version;
+        this.createdAt = createdAt.toISOString();
+        this.fileName = fileName;
+    }
+}
