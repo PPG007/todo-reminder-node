@@ -25,7 +25,7 @@ export function getCQParams(rawMessage: string): CQCodeParams {
     }
     const params = new Object();
     const paramPairs = strs[1].split(',');
-    params['types'] = paramPairs[0];
+    params['type'] = paramPairs[0];
     for (let index = 1; index < paramPairs.length; index++) {
         const pair = paramPairs[index];
         const kv = pair.split('=');

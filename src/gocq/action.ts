@@ -1,4 +1,4 @@
-import { sendJSON } from ".";
+import { sendJSON, setSelf } from ".";
 import WebSocket = require("ws");
 import * as util from '../util';
 import { syncUsers } from "../cron/user";
@@ -7,10 +7,12 @@ enum ActionEndPoint {
     ListFriends = 'get_friend_list',
     SendPrivateMessage = 'send_private_msg',
     SendGroupMessage = 'send_group_msg',
-    GetLogInfo = 'get_login_info',
+    GetLoginInfo = 'get_login_info',
 }
 
-export const ListFriendsEcho = 'ListFriends';
+export const EchoListFriends = 'ListFriends';
+
+export const EchoGetLoginInfo = "GetLoginInfo"
 
 class WebsocketRequest {
     action: string
@@ -53,11 +55,15 @@ export interface FriendItem {
     user_id: number;
 }
 
+export interface LoginInfo {
+    user_id: number;
+}
+
 export function sendListFriendsRequest(): void {
     util.warn({}, 'SendListFriendsRequest')
     const req = new WebsocketRequest();
     req.action = ActionEndPoint.ListFriends;
-    req.echo = ListFriendsEcho;
+    req.echo = EchoListFriends;
     sendJSON(req);
 }
 
@@ -108,9 +114,21 @@ export function actionResponseHandler(data: WebSocket.RawData, isBinary: boolean
     }
     const resp: ActionResponse = JSON.parse(data.toString());
     switch (resp.echo) {
-        case ListFriendsEcho:
+        case EchoListFriends:
             const items: FriendItem[] = resp.data;
             syncUsers(items);
             break;
+        case EchoGetLoginInfo:
+            const info: LoginInfo = resp.data;
+            setSelf(info);
+            break;
     }
+}
+
+export function getLoginInfo(): void {
+    const req: WebsocketRequest = {
+        action: ActionEndPoint.GetLoginInfo,
+        echo: EchoGetLoginInfo,
+    };
+    sendJSON(req);
 }

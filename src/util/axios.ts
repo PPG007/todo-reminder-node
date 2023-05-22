@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
 export async function get(url: string, params: object): Promise<object> {
     return new Promise<object>((res, rej) => {

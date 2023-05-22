@@ -1,7 +1,7 @@
 import WebSocket = require("ws");
 import application = require('../application.json');
 import * as util from '../util';
-import { actionResponseHandler } from "./action";
+import { LoginInfo, actionResponseHandler, getLoginInfo } from "./action";
 import { eventResponseHandler } from "./event";
 
 type closedHandler = (code: number, reason: Buffer) => void;
@@ -16,6 +16,8 @@ export enum ClientType {
 
 let actionWS: WebSocket;
 let eventWS: WebSocket;
+
+let self: LoginInfo;
 
 export function initWSClient(): void {
     initActionWSClient();
@@ -60,6 +62,9 @@ function getErrorHandler(clientType: ClientType): errorHandler {
 
 function getOpenHandler(clientType: ClientType): emptyHandler {
     return function(): void {
+        if (clientType === ClientType.Action) {
+            getLoginInfo();
+        }
         util.warn({}, `connected to gocq ${clientType} websocket server`);
     }
 }
@@ -82,4 +87,13 @@ export function sendJSON(req: object, clientType: ClientType = ClientType.Action
         return;
     }
     ws.send(JSON.stringify(req));
+}
+
+export function getSelf(): LoginInfo {
+    return self;
+}
+
+export function setSelf(info: LoginInfo): void {
+    util.warn(info, 'setSelf');
+    self = info;
 }
