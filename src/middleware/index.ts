@@ -8,12 +8,14 @@ interface Middleware {
 
 import recovery from './recovery';
 import auth from './auth';
+import access from './access';
 
 
 let middlewares = new Array<Middleware>();
 
 middlewares.push(recovery);
 middlewares.push(auth);
+middlewares.push(access);
 
 function sortMiddleware(): void {
     middlewares.sort((a, b) => {

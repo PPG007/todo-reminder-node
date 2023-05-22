@@ -4,7 +4,7 @@ import { noAuth } from "../controller";
 import * as util from '../util';
 
 const auth: Middleware = {
-    order: 1,
+    order: 2,
     handler: async (ctx, next) => {
         if (noAuth(ctx.request.path, ctx.method)) {
             await next();
