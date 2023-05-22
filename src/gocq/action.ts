@@ -29,7 +29,7 @@ class ActionResponse {
 
 interface SendPrivateMessageRequest {
     user_id: number;
-    message: string;
+    message: string | ImageMessage;
     auto_escape?: boolean;
 }
 
@@ -37,6 +37,14 @@ interface SendGroupMessageRequest {
     group_id: number;
     message: string;
     auto_escape?: boolean;
+}
+
+interface ImageMessage {
+    type: string;
+    data: {
+        file: string,
+        url: string;
+    };
 }
 
 export interface FriendItem {
@@ -62,6 +70,23 @@ export function sendPrivateStringMessage(toUser: string, message: string): void 
             auto_escape: true,
         }
     }
+    sendJSON(req);
+}
+
+export function sendPrivateImageMessage(toUser: string, url: string, fileName: string): void {
+    const req: WebsocketRequest = {
+        action: ActionEndPoint.SendPrivateMessage,
+        params: {
+            user_id: parseInt(toUser),
+            message: {
+                type: 'image',
+                data: {
+                    file: fileName,
+                    url: url,
+                },
+            },
+        },
+    };
     sendJSON(req);
 }
 

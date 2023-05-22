@@ -129,6 +129,33 @@ class TodoRecord implements Orm {
         const repo = await getRepository<TodoRecord>(TodoRecord);
         return repo.findAllWithPage(condition, listcondition.orderBy, listcondition.page, listcondition.perPage);
     }
+    static async listNeedRemindOnes(): Promise<Array<TodoRecord>> {
+        const repo = await getRepository<TodoRecord>(TodoRecord);
+        const condition = {
+            isDeleted: false,
+            remindAt: {
+                $lte: new Date(),
+            },
+            needRemind: true,
+            hasBeenDone: false,
+            hasBeenReminded: false,
+        };
+        return repo.findAll(condition);
+    }
+    static async markAsReminded(ids: ObjectId[]): Promise<void> {
+        const condition = {
+            _id: {
+                $in: ids
+            },
+        };
+        const updater = {
+            $set: {
+                hasBeenReminded: true,
+            }
+        }
+        const repo = await getRepository<TodoRecord>(TodoRecord);
+        return repo.updateAll(condition, updater);
+    }
 }
 
 export { TodoRecord }
