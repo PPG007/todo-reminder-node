@@ -26,10 +26,6 @@
     },
     "openai": {
         "isEnabled": true,
-        "proxy": {
-            "host": "127.0.0.1",
-            "port": 8889,
-            "protocol": "http"
-        }
+        "proxy": "http://127.0.0.1:8889"
     }
 }
