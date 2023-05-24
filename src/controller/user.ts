@@ -4,6 +4,7 @@ import { User } from "../model/user";
 import { LoginRequest, LoginResponse } from "./dto/user";
 import * as error from '../errors';
 import * as util from '../util';
+import { sendPrivateStringMessage } from "../gocq/action";
 
 let apis: Api[] = [];
 
@@ -46,10 +47,8 @@ const genPassword: Api = {
         const randomPassword = util.genRandomPassword();
         const hashedPassword = await util.getHashedPassword(randomPassword);
         await User.updatePassword(user.userId, hashedPassword);
-        // TODO: use gocq
-        ctx.response.body = {
-            password: randomPassword,
-        }
+        sendPrivateStringMessage(userId, randomPassword);
+        ctx.response.body = {}
     },
     noAuth: true,
 }
