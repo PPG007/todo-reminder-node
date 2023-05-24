@@ -1,4 +1,5 @@
 import * as conf from '../application.json';
+import { ErrOpanAINotAvailable } from '../errors';
 import { streamChat } from './stream';
 export interface Context {
     input: string;
@@ -12,12 +13,12 @@ interface OpenAI {
 class EmptyOpenAI implements OpenAI {
     chatCompletion(input: string): Promise<string> {
         return new Promise<string>((res, rej) => {
-            rej('openai not available');
+            rej(ErrOpanAINotAvailable);
         });
     }
     chatCompletionWithContext(input: string, context: Context[]): Promise<string> {
         return new Promise<string>((res, rej) => {
-            rej('openai not available');
+            rej(ErrOpanAINotAvailable);
         });
     }
 }

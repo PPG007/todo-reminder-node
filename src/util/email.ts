@@ -23,7 +23,7 @@ export async function sendMail(to: string, subject: string, text: string): Promi
     return new Promise<void>((res, rej) => {
         sender.sendMail(param, (err: Error) => {
             if (err) {
-                rej(err.message);
+                rej(err);
             } else {
                 res();
             }

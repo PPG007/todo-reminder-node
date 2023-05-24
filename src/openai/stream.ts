@@ -26,7 +26,7 @@ export async function streamChat(input: string, context?: Context[]): Promise<st
                     res(result);
                 },
                 onError(error) {
-                    rej(error.message);
+                    rej(error);
                 },
             }
         };

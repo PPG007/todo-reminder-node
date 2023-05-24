@@ -3,6 +3,7 @@ import * as conf from '../application.json';
 import { minioAk, minioSK } from "./env";
 import moment = require("moment");
 import { warn } from "./log";
+import { ErrObjectNotFound } from "../errors";
 
 let client: Client;
 
@@ -31,7 +32,7 @@ export async function isObjectExist(objectName:string): Promise<boolean> {
     const stat = await client.statObject(conf.minio.bucket, objectName)
     return new Promise<boolean>((res, rej) => {
         if (!stat || stat.size === 0) {
-            rej(false);
+            rej(ErrObjectNotFound);
         }
         res(true);
     });

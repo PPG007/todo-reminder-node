@@ -9,3 +9,5 @@ export function throwValidationError(field: string) {
 }
 
 export const ErrObjectNotFound = new Error('object not found');
+
+export const ErrOpanAINotAvailable = new Error('openai not available');

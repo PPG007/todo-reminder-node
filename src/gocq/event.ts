@@ -121,7 +121,6 @@ function handleGroupMessage(event: EventBody): void {
     openai.chatCompletion(content).then((res) => {
         sendGroupAtMessage(event.group_id.toString(), res, event.user_id.toString());
     }).catch((e) => {
-        util.warn(e, 'chat')
         sendGroupAtMessage(event.group_id.toString(), e.message !== '' ? e.message : JSON.stringify(e), event.user_id.toString());
     });
 }
