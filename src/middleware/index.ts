@@ -9,6 +9,7 @@ interface Middleware {
 import recovery from './recovery';
 import auth from './auth';
 import access from './access';
+import bodyParser = require('koa-bodyparser');
 
 
 let middlewares = new Array<Middleware>();
@@ -25,6 +26,7 @@ function sortMiddleware(): void {
 
 function getKoaApp(): koa {
     let app = new koa();
+    app.use(bodyParser());
     sortMiddleware()
     middlewares.forEach((middleware) => {
         app.use(middleware.handler);

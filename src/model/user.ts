@@ -35,13 +35,12 @@ class User implements Orm {
         const repo = await getRepository<User>(User);
         return repo.updateOne(condition, updater);
     };
-    async upsert(): Promise<void> {
+    async upsertWithoutPassword(): Promise<void> {
         const condition = {
             userId: this.userId,
         };
         const updater = {
             $set: {
-                password: this.password ? this.password : '',
                 nickname: this.nickname,
                 updatedAt: new Date(),
                 remark: this.remark,

@@ -11,8 +11,13 @@ const auth: Middleware = {
             return;
         }
         const token = ctx.request.header[ACCESS_TOKEN_IN_HEADER];
-        const userClaim =  await util.parseToken(token as string);
-        util.setUserInfoInContext(ctx, userClaim);
+        try {
+            const userClaim = await util.parseToken(token as string);
+            util.setUserInfoInContext(ctx, userClaim);
+        } catch (e) {
+            ctx.response.status = 401;
+            throw e;
+        }
         await next();
     }
 }

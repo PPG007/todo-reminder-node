@@ -6,7 +6,9 @@ const recovery: Middleware = {
         try {
             await next();
         } catch(e) {
-            ctx.response.status = 400;
+            if (ctx.response.status !== 400) {
+                ctx.response.status = 400;
+            }
             ctx.response.body = {
                 message: e.message != ''? e.message :'Unknown error',
             };

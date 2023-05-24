@@ -3,8 +3,8 @@ import { Api, HttpMethod } from ".";
 import * as util from '../util';
 import { Todo } from "../model/todo";
 import { TodoRecord } from "../model/todoRecord";
-import { GetObjectResponse, UpsertTodoRequest } from "./dto/todo";
-import { isObjectExist, signObjectUrl } from "../util/minio";
+import { GetObjectResponse, OssPostPolicyResponse, UpsertTodoRequest } from "./dto/todo";
+import { getPreSignedPostObjectPolicy, isObjectExist, signObjectUrl } from "../util/minio";
 import { ErrObjectNotFound } from "../errors";
 
 let apis: Api[] = [];
@@ -37,11 +37,11 @@ const deleteTodo: Api = {
 const genUploadUrl: Api = {
     path: '/todos/uploadUrl',
     method: HttpMethod.GET,
-    handler: (ctx, next) => {
-        ctx.response.body = {
-            id: util.getUserPrimaryKeyId(ctx),
-            userId: util.getUserId(ctx),
-        };
+    handler: async (ctx, next) => {
+        const objectName = ctx.query['fileName'];
+        const uniqueName = `${new ObjectId().toHexString()}_${objectName}`;
+        const result = await getPreSignedPostObjectPolicy(uniqueName);
+        ctx.response.body = new OssPostPolicyResponse(result);
     }
 }
 
@@ -59,14 +59,6 @@ const getObject: Api = {
     }
 }
 
-const uploadProxy: Api = {
-    path: '/todos/object/uploadProxy',
-    method: HttpMethod.POST,
-    handler: (ctx, next) => {
-
-    }
-}
-
-apis.push(upsert, deleteTodo, genUploadUrl, getObject, uploadProxy);
+apis.push(upsert, deleteTodo, genUploadUrl, getObject);
 
 export default apis;

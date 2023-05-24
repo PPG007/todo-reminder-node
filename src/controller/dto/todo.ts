@@ -3,6 +3,7 @@ import { RemindSetting, RepeatType, Todo } from "../../model/todo";
 import moment = require("moment");
 import { throwValidationError } from "../../errors";
 import { copyObject } from "../../util";
+import { PostPolicyResult } from "minio";
 
 
 export class UpsertTodoRequest {
@@ -80,5 +81,14 @@ export class GetAppResponse {
         this.version = version;
         this.createdAt = createdAt.toISOString();
         this.fileName = fileName;
+    }
+}
+
+export class OssPostPolicyResponse {
+    url: string;
+    formData: object;
+    constructor(result: PostPolicyResult) {
+        this.url = result.postURL
+        this.formData = result.formData;
     }
 }

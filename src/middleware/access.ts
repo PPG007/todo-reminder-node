@@ -1,6 +1,5 @@
 import { Middleware } from ".";
 import { AccessLog } from "../model/accessLog";
-import { warn } from "../util";
 
 const access: Middleware = {
     order: 1,

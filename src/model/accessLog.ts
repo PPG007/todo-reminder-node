@@ -3,6 +3,7 @@ import { Orm } from "../orm/orm";
 import { getDefaultOrmMap } from "./common";
 import getRepository from "../repository/mongo";
 import { IRouterContext } from "koa-router";
+import { warn } from "../util";
 
 export class AccessLog implements Orm {
     id: ObjectId;
@@ -29,14 +30,14 @@ export class AccessLog implements Orm {
         this.responseStatus = 200;
         if (error) {
             this.responseStatus = 400;
-            this.responseBody = error;
+            this.responseBody = error.message? error.message : JSON.stringify(error);
         }
         return repo.insert(this);
     }
     static init(ctx: IRouterContext): AccessLog {
         const log = new AccessLog();
         log.startTime = new Date();
-        log.body = ctx.request.rawBody;
+        log.body = JSON.stringify(ctx.request.body);
         log.method = ctx.request.method;
         log.url = ctx.request.url;
         let userAgent = ctx.request.header['User-Agent'];

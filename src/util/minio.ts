@@ -1,18 +1,20 @@
-import { Client, PostPolicy } from "minio";
+import { Client, PostPolicy, PostPolicyResult } from "minio";
 import * as conf from '../application.json';
 import { minioAk, minioSK } from "./env";
 import moment = require("moment");
+import { warn } from "./log";
 
 let client: Client;
 
-export async function initMinioClient(): Promise<void> {
+export function initMinioClient(): void {
     client = new Client({
         endPoint: conf.minio.host,
         port: conf.minio.port,
         accessKey: minioAk,
         secretKey: minioSK,
+        useSSL: false,
     });
-    await ensureBucket();
+    ensureBucket().catch((e) => warn(e, 'ensure bucket failed'));
 }
 
 async function ensureBucket(): Promise<void> {
@@ -43,13 +45,10 @@ export async function getPreSignedPutObjectUrl(objectName:string): Promise<strin
     return client.presignedPutObject(conf.minio.bucket, objectName, conf.minio.urlExpiredSeconds);
 }
 
-export async function getPreSignedPostObjectUrl(objectName:string): Promise<string> {
+export async function getPreSignedPostObjectPolicy(objectName:string): Promise<PostPolicyResult> {
     const postPolicy = new PostPolicy();
     postPolicy.setBucket(conf.minio.bucket);
     postPolicy.setKey(objectName);
-    postPolicy.setExpires(moment().add('seconds', conf.minio.urlExpiredSeconds).toDate())
-    const result = await client.presignedPostPolicy(postPolicy);
-    return new Promise<string>((res, rej) => {
-        res(result.postURL);
-    });
+    postPolicy.setExpires(moment().add(conf.minio.urlExpiredSeconds, 'seconds').toDate())
+    return await client.presignedPostPolicy(postPolicy);
 }

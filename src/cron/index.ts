@@ -14,7 +14,7 @@ export function initCronJobs() {
         refreshHoliday().catch(e=>{warn(e, 'failed to refresh holiday')});
     }).invoke();
 
-    scheduleJob({minute: 1}, function(){
+    scheduleJob({second: 20}, function(){
         remind().catch(e => {warn(e, 'failed to remind')});
     });
 }
