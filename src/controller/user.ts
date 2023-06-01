@@ -37,7 +37,7 @@ const login: Api = {
 
 const genPassword: Api = {
     path: '/user/:userId/genPassword',
-    method: HttpMethod.POST,
+    method: HttpMethod.GET,
     handler: async (ctx, next) => {
         const userId = ctx.params['userId'];
         const user = await User.getByUserId(userId);
