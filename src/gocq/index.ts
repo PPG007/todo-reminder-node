@@ -25,7 +25,7 @@ export function initWSClient(): void {
 }
 
 function initActionWSClient(): void {
-    util.warn({}, 'starting gocq action websockets client');
+    util.warn('starting gocq action websockets client');
     actionWS = new WebSocket(`${application.gocq.uri}/api`);
     actionWS.on('message', actionResponseHandler);
     actionWS.on('close', getClosedHandler(ClientType.Action, initActionWSClient));
@@ -34,7 +34,7 @@ function initActionWSClient(): void {
 }
 
 function initEventWSClient(): void {
-    util.warn({}, 'starting gocq event websockets client');
+    util.warn('starting gocq event websockets client');
     eventWS = new WebSocket(`${application.gocq.uri}/event`);
     eventWS.on('message', eventResponseHandler);
     eventWS.on('close', getClosedHandler(ClientType.Event, initEventWSClient));
@@ -44,10 +44,10 @@ function initEventWSClient(): void {
 
 function getClosedHandler(clientType: ClientType, f: initFunc): closedHandler {
     return function (code: number, reason: Buffer): void {
-        util.warn({
+        util.warn(`gocq ${clientType} websockets connection disconnected`, {
             code: code,
             reason: reason.toJSON(),
-        }, `gocq ${clientType} websockets connection disconnected`);
+        });
         setTimeout(() => {
             f();
         }, 5000);
@@ -56,7 +56,7 @@ function getClosedHandler(clientType: ClientType, f: initFunc): closedHandler {
 
 function getErrorHandler(clientType: ClientType): errorHandler {
     return function(error: Error): void {
-        util.error({ error: error.message }, `got error in gocq ${clientType} websocket connection`);
+        util.error(`got error in gocq ${clientType} websocket connection`, { error: error.message });
     }
 }
 
@@ -65,7 +65,7 @@ function getOpenHandler(clientType: ClientType): emptyHandler {
         if (clientType === ClientType.Action) {
             getLoginInfo();
         }
-        util.warn({}, `connected to gocq ${clientType} websocket server`);
+        util.warn(`connected to gocq ${clientType} websocket server`);
     }
 }
 
@@ -75,7 +75,7 @@ function getWSClient(clientType: ClientType): WebSocket {
         client = eventWS;
     }
     if (!client || client.readyState != WebSocket.OPEN) {
-        util.warn({}, 'websocket connection not ready')
+        util.warn('websocket connection not ready')
         return null;
     }
     return client;
@@ -94,6 +94,6 @@ export function getSelf(): LoginInfo {
 }
 
 export function setSelf(info: LoginInfo): void {
-    util.warn(info, 'setSelf');
+    util.warn('setSelf', info);
     self = info;
 }

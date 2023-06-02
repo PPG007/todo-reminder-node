@@ -63,7 +63,7 @@ enum MessageType {
 
 export function eventResponseHandler(data: WebSocket.RawData, isBinary: boolean): void {
     if (isBinary) {
-        util.warn({}, 'received binary data');
+        util.warn('received binary data');
         return;
     }
     const event: EventBody = JSON.parse(data.toString());
@@ -89,7 +89,7 @@ function handleMetaEvent(event: EventBody): void {
             return;
         }
         util.sendAlert('gocq heartbeat check failed').catch((e) => {
-            util.error(e, 'Failed to send alert');
+            util.error('Failed to send alert', e);
         });
         lastAlertTime = moment();
     }, 3000);

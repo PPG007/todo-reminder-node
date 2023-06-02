@@ -60,7 +60,7 @@ export interface LoginInfo {
 }
 
 export function sendListFriendsRequest(): void {
-    util.warn({}, 'SendListFriendsRequest')
+    util.warn('SendListFriendsRequest')
     const req = new WebsocketRequest();
     req.action = ActionEndPoint.ListFriends;
     req.echo = EchoListFriends;
@@ -109,7 +109,7 @@ export function sendGroupAtMessage(groupId: string, message: string, userId: str
 
 export function actionResponseHandler(data: WebSocket.RawData, isBinary: boolean): void {
     if (isBinary) {
-        util.warn({}, 'received binary data');
+        util.warn('received binary data');
         return;
     }
     const resp: ActionResponse = JSON.parse(data.toString());

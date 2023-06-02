@@ -11,10 +11,10 @@ export function initCronJobs() {
     });
 
     scheduleJob({date: 1}, function () {
-        refreshHoliday().catch(e=>{warn(e, 'failed to refresh holiday')});
+        refreshHoliday().catch(e=>{warn('failed to refresh holiday', e)});
     }).invoke();
 
     scheduleJob({second: 20}, function(){
-        remind().catch(e => {warn(e, 'failed to remind')});
+        remind().catch(e => {warn('failed to remind', e)});
     });
 }

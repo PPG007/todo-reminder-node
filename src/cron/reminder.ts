@@ -15,10 +15,10 @@ export async function remind() {
                 try {
                     url = await signObjectUrl(image);
                 } catch(e) {
-                    warn({
+                    warn('failed to get object url', {
                         error: e,
                         object: image,
-                    }, 'failed to get object url');
+                    });
                     return;
                 }
                 sendPrivateImageMessage(record.userId, url, image);

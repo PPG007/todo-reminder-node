@@ -3,7 +3,6 @@ import { Orm } from "../orm/orm";
 import { getDefaultOrmMap } from "./common";
 import getRepository from "../repository/mongo";
 import { IRouterContext } from "koa-router";
-import { warn } from "../util";
 import { REMOTE_IP_IN_HEADER, REMOTE_PORT_IN_HEADER } from "../const";
 
 export class AccessLog implements Orm {

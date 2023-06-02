@@ -5,7 +5,6 @@ const access: Middleware = {
     order: 1,
     handler: async (ctx, next) => {
         const log = AccessLog.init(ctx);
-        log.remoteAddress = ctx.request.ip;
         let err: any = undefined;
         try {
             await next();

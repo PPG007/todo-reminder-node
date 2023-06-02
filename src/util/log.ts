@@ -6,14 +6,14 @@ const logger = pino({
     base: undefined,
 });
 
-export function info(obj: Object, message: string): void {
+export function info(message: string, obj: Object = {}): void {
     logger.info(obj, message);
 }
 
-export function warn(obj: Object, message: string): void {
+export function warn( message: string, obj: Object = {}): void {
     logger.warn(obj, message);
 }
 
-export function error(obj: Object, message: string): void {
+export function error(message: string, obj: Object = {}): void {
     logger.error(obj, message);
 }

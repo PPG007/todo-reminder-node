@@ -1,6 +1,5 @@
 import moment = require("moment");
 import { get } from "../util/axios";
-import { warn } from "../util";
 import { ChinaHoliday } from "../model/chinaHoliday";
 
 const HolidayAPI = 'https://api.apihubs.cn/holiday/get';

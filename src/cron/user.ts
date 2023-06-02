@@ -10,7 +10,7 @@ export function syncUsers(friends: FriendItem[]): void {
         user.nickname = friend.nickname;
         user.remark = friend.remark;
         user.upsertWithoutPassword().catch(e=>{
-            warn(e, 'sync user failed');
+            warn('sync user failed', e);
         })
     }
 }

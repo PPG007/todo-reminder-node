@@ -15,7 +15,7 @@ export function initMinioClient(): void {
         secretKey: minioSK,
         useSSL: false,
     });
-    ensureBucket().catch((e) => warn(e, 'ensure bucket failed'));
+    ensureBucket().catch((e) => warn('ensure bucket failed', e));
 }
 
 async function ensureBucket(): Promise<void> {
